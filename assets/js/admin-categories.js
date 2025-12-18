@@ -32,47 +32,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Carregar Categorias na Tabela ---
     const loadCategories = async () => {
-        try {
-            const response = await fetch(
-                `${API_BASE_URL}/api/admin/categories`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                }
-            );
 
-            if (!response.ok) throw new Error('Erro ao carregar categorias');
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/api/admin/categories`,
+            {
+                credentials: 'include' // 🔑 envia o cookie da sessão
+            }
+        );
 
-            const categories = await response.json();
-
-            tableBody.innerHTML = '';
-
-            categories.forEach(cat => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${cat.name}</td>
-                    <td>${cat.slug}</td>
-                    <td class="actions">
-                        <button class="btn-action edit" data-id="${cat._id}" data-name="${cat.name}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-action delete" data-id="${cat._id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(tr);
-            });
-
-        } catch (error) {
-            console.error(error);
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="3">Erro ao carregar categorias.</td>
-                </tr>
-            `;
+        if (!response.ok) {
+            throw new Error('Erro ao carregar categorias');
         }
+
+        const categories = await response.json();
+
+        tableBody.innerHTML = '';
+
+        categories.forEach(cat => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${cat.name}</td>
+                <td>${cat.slug}</td>
+                <td class="actions">
+                    <button class="btn-action edit" data-id="${cat._id}" data-name="${cat.name}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-action delete" data-id="${cat._id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+    } catch (error) {
+        console.error(error);
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="3">Erro ao carregar categorias.</td>
+            </tr>
+        `;
+    }
+
     };
 
     // --- Salvar (Criar ou Editar) Categoria ---
@@ -94,9 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(url, {
                 method,
+                credentials: 'include', // 🔑 envia o cookie da sessão
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(categoryData)
             });
@@ -113,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
             alert(error.message);
         }
+
     });
 
     // --- Delegação de Eventos (Editar e Deletar) ---
@@ -127,18 +130,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!confirm('Tem certeza que deseja deletar esta categoria? (Produtos nela ficarão sem categoria e podem causar erros)')) {
                 return;
             }
+
             try {
                 const response = await fetch(
                     `${API_BASE_URL}/api/admin/categories/${id}`,
                     {
                         method: 'DELETE',
-                        headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                        }
+                        credentials: 'include'
                     }
                 );
 
-                if (!response.ok) throw new Error('Falha ao deletar');
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.message || 'Falha ao deletar');
+                }
+
                 loadCategories();
             } catch (error) {
                 alert(error.message);
