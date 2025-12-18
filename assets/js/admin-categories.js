@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tableBody = document.getElementById('categories-table-body');
     const btnNewCategory = document.getElementById('btn-new-category');
+    const API_BASE_URL = 'https://force-war-api-production.up.railway.app';
     
     // Elementos do Modal
     const modal = document.getElementById('category-modal');
@@ -32,26 +33,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Carregar Categorias na Tabela ---
     const loadCategories = async () => {
         try {
-            const response = await fetch('/api/admin/categories');
+            const response = await fetch(
+                `${API_BASE_URL}/api/admin/categories`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }
+            );
+
             if (!response.ok) throw new Error('Erro ao carregar categorias');
+
             const categories = await response.json();
 
             tableBody.innerHTML = '';
+
             categories.forEach(cat => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${cat.name}</td>
                     <td>${cat.slug}</td>
                     <td class="actions">
-                        <button class="btn-action edit" data-id="${cat._id}" data-name="${cat.name}"><i class="fas fa-edit"></i></button>
-                        <button class="btn-action delete" data-id="${cat._id}"><i class="fas fa-trash"></i></button>
+                        <button class="btn-action edit" data-id="${cat._id}" data-name="${cat.name}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-action delete" data-id="${cat._id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </td>
                 `;
                 tableBody.appendChild(tr);
             });
+
         } catch (error) {
             console.error(error);
-            tableBody.innerHTML = `<tr><td colspan="3">Erro ao carregar categorias.</td></tr>`;
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="3">Erro ao carregar categorias.</td>
+                </tr>
+            `;
         }
     };
 
@@ -60,17 +80,24 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         
         const categoryId = categoryIdInput.value;
+
         const categoryData = {
             name: nameInput.value
         };
 
-        const url = categoryId ? `/api/admin/categories/${categoryId}` : '/api/admin/categories';
+        const url = categoryId
+            ? `${API_BASE_URL}/api/admin/categories/${categoryId}`
+            : `${API_BASE_URL}/api/admin/categories`;
+
         const method = categoryId ? 'PUT' : 'POST';
 
         try {
             const response = await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
                 body: JSON.stringify(categoryData)
             });
 
@@ -101,7 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             try {
-                const response = await fetch(`/api/admin/categories/${id}`, { method: 'DELETE' });
+                const response = await fetch(
+                    `${API_BASE_URL}/api/admin/categories/${id}`,
+                    {
+                        method: 'DELETE',
+                        headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    }
+                );
+
                 if (!response.ok) throw new Error('Falha ao deletar');
                 loadCategories();
             } catch (error) {
