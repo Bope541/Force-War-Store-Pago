@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Acesse sua conta Invict para gerenciar compras, produtos e assinaturas com segurança.">
     <title>Invict - Login</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
 </head>
 <body class="auth-page">
 
 <header class="new-navbar">
         <div class="container">
-            <div class="logo"><a href="/"><img src="/assets/img/logo.png" alt="Logo da Loja" class="logo-img"></a></div>
+            <div class="logo"><a href="/"><img src="assets/img/logo.png" alt="Logo da Loja" class="logo-img"></a></div>
             <nav class="new-nav-links">
                 <a href="/" class="nav-item" data-key="nav_home">Inicial</a>
-                <a href="/loja.html" class="nav-item" data-key="nav_store">Loja</a>
-                <a href="/faq.html" class="nav-item" data-key="nav_faq">FAQ</a>
+                <a href="loja.html" class="nav-item" data-key="nav_store">Loja</a>
+                <a href="faq.html" class="nav-item" data-key="nav_faq">FAQ</a>
             </nav>
             <div class="new-nav-actions" id="nav-auth-container">
                 </div>
@@ -28,7 +28,7 @@
 
         <div class="mobile-nav" id="mobile-nav">
             <div class="mobile-nav-header">
-                <img src="/assets/img/logo.png" alt="Logo da Loja" class="logo-img">
+                <img src="assets/img/logo.png" alt="Logo da Loja" class="logo-img">
                 <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Fechar menu">
                     <i class="fas fa-times"></i>
                 </button>
@@ -50,7 +50,7 @@
             <p id="auth-error-msg" class="auth-error" style="display:none;"></p>
             <p id="auth-success-msg" class="auth-success" style="display:none;"></p>
 
-            <form action="/login" method="POST" class="auth-form">
+            <form action="login" method="POST" class="auth-form">
                 <div class="form-group">
                     <label for="username_email" data-key="login_email_user">EMAIL OU NOME DE USUÁRIO</label>
                     <input type="text" id="username_email" name="username_email" placeholder="unknownuser" required>
@@ -61,21 +61,21 @@
                     <i class="fas fa-eye password-toggle-icon" id="togglePassword"></i>
                 </div>
                 <div class="auth-options">
-                    <a href="/forgot-password" class="forgot-password" data-key="login_forgot">Esqueceu a senha?</a>
+                    <a href="forgot-password" class="forgot-password" data-key="login_forgot">Esqueceu a senha?</a>
                 </div>
                 <button type="submit" class="btn btn-primary full-width" data-key="login_continue">Continuar</button>
             </form>
 
             <div class="auth-divider" data-key="form_or">OU</div>
 
-            <a href="/auth/discord" class="btn btn-discord full-width">
+            <a href="auth/discord" class="btn btn-discord full-width">
                 <i class="fab fa-discord"></i>
                 <span data-key="login_discord">Logar com Discord</span>
             </a>
 
             <div class="auth-switch-link">
                 <span data-key="login_no_account">Não possui conta?</span>
-                <a href="/register" data-key="login_register_now">Cadastre-se agora</a>
+                <a href="register" data-key="login_register_now">Cadastre-se agora</a>
             </div>
         </div>
     </main>
@@ -87,8 +87,8 @@
         </div>
     </footer>
 
-    <script src="/assets/js/translations.js"></script>
-    <script src="/assets/js/script.js"></script> 
+    <script src="assets/js/translations.js"></script>
+    <script src="assets/js/script.js"></script> 
 
 </body>
 </html>
