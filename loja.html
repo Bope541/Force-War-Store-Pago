@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Explore a loja Invict e descubra produtos premium com entrega automática, suporte 24/7 e total segurança.">
     <title>Invict - Loja</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="/assets/css/store.css"> 
-    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/store.css"> 
+    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
 </head>
 <body>
 
 <header class="new-navbar">
         <div class="container">
-            <div class="logo"><a href="/"><img src="/assets/img/logo.png" alt="Logo da Loja" class="logo-img"></a></div>
+            <div class="logo"><a href="/"><img src="assets/img/logo.png" alt="Logo da Loja" class="logo-img"></a></div>
             <nav class="new-nav-links">
                 <a href="/" class="nav-item" data-key="nav_home">Inicial</a>
-                <a href="/loja.html" class="nav-item" data-key="nav_store">Loja</a>
-                <a href="/faq.html" class="nav-item" data-key="nav_faq">FAQ</a>
+                <a href="loja.html" class="nav-item" data-key="nav_store">Loja</a>
+                <a href="faq.html" class="nav-item" data-key="nav_faq">FAQ</a>
             </nav>
             <div class="new-nav-actions" id="nav-auth-container">
                 </div>
@@ -29,7 +29,7 @@
 
         <div class="mobile-nav" id="mobile-nav">
             <div class="mobile-nav-header">
-                <img src="/assets/img/logo.png" alt="Logo da Loja" class="logo-img">
+                <img src="assets/img/logo.png" alt="Logo da Loja" class="logo-img">
                 <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Fechar menu">
                     <i class="fas fa-times"></i>
                 </button>
@@ -102,8 +102,8 @@
         </div>
     </footer>
 
-    <script src="/assets/js/translations.js"></script>
-    <script src="/assets/js/script.js"></script> 
+    <script src="assets/js/translations.js"></script>
+    <script src="assets/js/script.js"></script> 
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -248,8 +248,8 @@
                 try {
                     // Busca produtos e categorias em paralelo
                     const [productsRes, categoriesRes] = await Promise.all([
-                        fetch('/api/products'), // API de produtos (já popula a categoria)
-                        fetch('/api/public/categories') // API pública de categorias
+                        fetch('api/products'), // API de produtos (já popula a categoria)
+                        fetch('api/public/categories') // API pública de categorias
                     ]);
 
                     if (!productsRes.ok || !categoriesRes.ok) {
