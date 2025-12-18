@@ -1,4 +1,5 @@
 // --- CONFIGURAÇÃO DA TRADUÇÃO (i18n) ---
+const API_BASE_URL = 'https://force-war-api-production.up.railway.app';
 const flagImages = {
     "pt": "https://flagicons.lipis.dev/flags/4x3/br.svg",
     "en": "https://flagicons.lipis.dev/flags/4x3/us.svg"
@@ -74,7 +75,7 @@ function initializePasswordToggles() {
 // --- (FUNÇÃO ATUALIZADA) STATUS DE LOGIN (com link de Afiliado) ---
 async function updateNavStatus() {
     try {
-        const response = await fetch('/api/auth/status');
+        const response = await fetch(`${API_BASE_URL}/api/auth/status`, { credentials: 'include' });
         const data = await response.json();
         
         // (MODIFICADO) Seleciona os DOIS containers
