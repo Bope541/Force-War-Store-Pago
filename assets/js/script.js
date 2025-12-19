@@ -71,97 +71,91 @@ function initializePasswordToggles() {
         toggle.dataset.listenerAttached = 'true';
     });
 }
-
-// --- (FUNÇÃO ATUALIZADA) STATUS DE LOGIN (com link de Afiliado) ---
-async function updateNavStatus() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/status`, { credentials: 'include' });
-        const data = await response.json();
-        
-        // (MODIFICADO) Seleciona os DOIS containers
-        const authContainer = document.getElementById('nav-auth-container');
-        const mobileAuthContainer = document.getElementById('mobile-nav-auth-container');
-        
-        if (!authContainer) return;
-
-        const lang = localStorage.getItem('language') || defaultLang;
-        
-        // Limpa os dois
-        authContainer.innerHTML = ''; 
-        if (mobileAuthContainer) mobileAuthContainer.innerHTML = '';
-
-        if (data.loggedIn) {
-            const welcomeText = (translations[lang]['nav_welcome'] || translations[defaultLang]['nav_welcome']).replace('{username}', data.user.username);
+    async function updateNavStatus() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/auth/status`, { credentials: 'include' });
+            const data = await response.json();
             
-            // Textos do Dropdown
-            const myAccountText = translations[lang]['nav_account'] || "Minha Conta";
-            const myOrdersText = translations[lang]['nav_orders'] || "Meus Pedidos";
-            const logoutText = translations[lang]['nav_logout'] || "Logout";
-            const affiliateText = "Painel Afiliado"; 
-
-            let avatarHtml = '';
-            if (data.user.avatar && data.user.discordId) {
-                const avatarUrl = `https://cdn.discordapp.com/avatars/${data.user.discordId}/${data.user.avatar}.png`;
-                avatarHtml = `<img src="${avatarUrl}" alt="Avatar" class="nav-user-avatar">`;
-            } else {
-                avatarHtml = `<div class="nav-user-avatar default-avatar"><i class="fas fa-user"></i></div>`;
-            }
+            // (MODIFICADO) Seleciona os DOIS containers
+            const authContainer = document.getElementById('nav-auth-container');
+            const mobileAuthContainer = document.getElementById('mobile-nav-auth-container');
             
-            let affiliateLink = '';
-            if (data.isAffiliate) {
-                affiliateLink = `
-                <a href="/affiliate-dashboard.html" class="dropdown-item">
-                    <i class="fas fa-hand-holding-usd"></i> ${affiliateText}
-                </a>
-                `;
-            }
+            if (!authContainer) return;
+
+            const lang = localStorage.getItem('language') || defaultLang;
             
-            // --- HTML do Dropdown (para Desktop e Mobile) ---
-            // (OBS: O CSS cuida do posicionamento do dropdown em cada local)
-            const userMenuHtml = `
-                <div class="nav-user-menu">
-                    ${avatarHtml}
-                    <span>${welcomeText}</span>
-                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+            // Limpa os dois
+            authContainer.innerHTML = ''; 
+            if (mobileAuthContainer) mobileAuthContainer.innerHTML = '';
 
-                    <div class="nav-user-dropdown">
-                        <a href="/minha-conta" class="dropdown-item">
-                            <i class="fas fa-user-circle"></i> ${myAccountText}
-                        </a>
-                        <a href="/meus-pedidos" class="dropdown-item">
-                            <i class="fas fa-receipt"></i> ${myOrdersText}
-                        </a>
-                        ${affiliateLink} 
-                        <a href="/logout" class="dropdown-item logout">
-                            <i class="fas fa-sign-out-alt"></i> ${logoutText}
-                        </a>
-                    </div>
-                </div>
-            `;
-
-            authContainer.innerHTML = userMenuHtml;
-            if (mobileAuthContainer) mobileAuthContainer.innerHTML = userMenuHtml;
+    if (data.loggedIn === true || data.logged === true || data.authenticated === true) {
+        const welcomeText = (translations[lang]['nav_welcome'] || translations[defaultLang]['nav_welcome'])
+            .replace('{username}', data.user.username);
         
+        // Textos do Dropdown
+        const myAccountText = translations[lang]['nav_account'] || "Minha Conta";
+        const myOrdersText = translations[lang]['nav_orders'] || "Meus Pedidos";
+        const logoutText = translations[lang]['nav_logout'] || "Logout";
+        const affiliateText = "Painel Afiliado"; 
+
+        let avatarHtml = '';
+        if (data.user && data.user.avatar && data.user.discordId) {
+            const avatarUrl = `https://cdn.discordapp.com/avatars/${data.user.discordId}/${data.user.avatar}.png`;
+            avatarHtml = `<img src="${avatarUrl}" alt="Avatar" class="nav-user-avatar">`;
         } else {
-            // Escondido por CSS na navbar 'compact'
-            const loginText = translations[lang]['nav_login'] || translations[defaultLang]['nav_login'];
-            const registerText = translations[lang]['nav_register'] || translations[defaultLang]['nav_register'];
-            
-            // --- HTML dos Botões (para Desktop) ---
-            const authButtonsHtml = `
-                <a href="/login" class="btn btn-primary">${loginText}</a> 
-                <a href="/register" class="btn btn-secondary">${registerText}</a> 
-            `;
-            
-            // (NOVO) Botões para Mobile (empilhados)
-            const mobileAuthButtonsHtml = `
-                <a href="/login" class="btn btn-primary">${loginText}</a> 
-                <a href="/register" class="btn btn-secondary">${registerText}</a>
-            `;
-            
-            authContainer.innerHTML = authButtonsHtml;
-            if (mobileAuthContainer) mobileAuthContainer.innerHTML = mobileAuthButtonsHtml;
+            avatarHtml = `<div class="nav-user-avatar default-avatar"><i class="fas fa-user"></i></div>`;
         }
+        
+        let affiliateLink = '';
+        if (data.isAffiliate === true) {
+            affiliateLink = `
+            <a href="/affiliate-dashboard.html" class="dropdown-item">
+                <i class="fas fa-hand-holding-usd"></i> ${affiliateText}
+            </a>
+            `;
+        }
+        
+        const userMenuHtml = `
+            <div class="nav-user-menu">
+                ${avatarHtml}
+                <span>${welcomeText}</span>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+
+                <div class="nav-user-dropdown">
+                    <a href="/minha-conta" class="dropdown-item">
+                        <i class="fas fa-user-circle"></i> ${myAccountText}
+                    </a>
+                    <a href="/meus-pedidos" class="dropdown-item">
+                        <i class="fas fa-receipt"></i> ${myOrdersText}
+                    </a>
+                    ${affiliateLink} 
+                    <a href="/logout" class="dropdown-item logout">
+                        <i class="fas fa-sign-out-alt"></i> ${logoutText}
+                    </a>
+                </div>
+            </div>
+        `;
+
+        authContainer.innerHTML = userMenuHtml;
+        if (mobileAuthContainer) mobileAuthContainer.innerHTML = userMenuHtml;
+
+    } else {
+        const loginText = translations[lang]['nav_login'] || translations[defaultLang]['nav_login'];
+        const registerText = translations[lang]['nav_register'] || translations[defaultLang]['nav_register'];
+        
+        const authButtonsHtml = `
+            <a href="/login" class="btn btn-primary">${loginText}</a> 
+            <a href="/register" class="btn btn-secondary">${registerText}</a> 
+        `;
+        
+        const mobileAuthButtonsHtml = `
+            <a href="/login" class="btn btn-primary">${loginText}</a> 
+            <a href="/register" class="btn btn-secondary">${registerText}</a>
+        `;
+        
+        authContainer.innerHTML = authButtonsHtml;
+        if (mobileAuthContainer) mobileAuthContainer.innerHTML = mobileAuthButtonsHtml;
+    }
 
         // Adiciona a bandeira (APENAS NO DESKTOP)
 // --- (MODIFICADO) Adiciona a bandeira (Desktop e Mobile) ---
