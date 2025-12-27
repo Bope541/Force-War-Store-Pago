@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Elementos da Página
+    const API_URL = 'https://force-war-api-production.up.railway.app';
     const affiliatesTableBody = document.getElementById('affiliates-table-body');
     const btnNewAffiliate = document.getElementById('btn-new-affiliate');
     
@@ -62,7 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
-            const res = await fetch('/api/admin/coupons');
+            const res = await fetch(`${API_URL}/api/admin/coupons`, {
+                credentials: 'include'
+            });
             allCoupons = await res.json();
             linkedCouponsSelect.innerHTML = allCoupons.map(c => 
                 `<option value="${c._id}">${c.code}</option>`
@@ -75,7 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Carregar Afiliados na Tabela ---
     const loadAffiliates = async () => {
         try {
-            const response = await fetch('/api/admin/affiliates');
+            const response = await fetch(`${API_URL}/api/admin/affiliates`, {
+                credentials: 'include'
+            });
             if (!response.ok) throw new Error('Erro ao carregar afiliados');
             const affiliates = await response.json();
 
@@ -133,12 +138,16 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         
         const affiliateId = affiliateIdInput.value;
-        const url = affiliateId ? `/api/admin/affiliates/${affiliateId}` : '/api/admin/affiliates';
         const method = affiliateId ? 'PUT' : 'POST';
 
         try {
+            const url = affiliateId
+                ? `${API_URL}/api/admin/affiliates/${affiliateId}`
+                : `${API_URL}/api/admin/affiliates`;
+
             const response = await fetch(url, {
-                method: method,
+                method,
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(affiliateData)
             });
@@ -170,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             try {
-                const response = await fetch(`/api/admin/affiliates/${id}`, { method: 'DELETE' });
+                const response = await fetch(`${API_URL}/api/admin/affiliates/${id}`, {method: 'DELETE',credentials: 'include'});
                 if (!response.ok) throw new Error('Falha ao deletar afiliado');
                 loadAffiliates();
             } catch (error) {
@@ -184,7 +193,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 await loadCouponsIntoModal();
                 
-                const response = await fetch(`/api/admin/affiliates/${id}`); 
+                const response = await fetch(`${API_URL}/api/admin/affiliates/${id}`, {
+                    credentials: 'include'
+                });
                 if (!response.ok) throw new Error('Falha ao carregar dados do afiliado');
                 const affiliate = await response.json();
 
